@@ -1,0 +1,159 @@
+//FIFO paging
+#include<stdio.h>
+int main()
+{
+int i,j=0,n,a[50],frame[10],fsize,k,available,pagefault=0;
+printf("enter the no of pages:\n");
+scanf("%d",&n);
+printf("enter the pages :\n");
+for(i=1;i<=n;i++)
+scanf("%d",&a[i]);
+printf("enter frame size :");
+scanf("%d",&fsize);
+for(i=0;i<fsize;i++)
+frame[i]= -1;
+for(i=1;i<=n;i++)
+{
+available=0;
+for(k=0;k<fsize;k++)
+if(frame[k]==a[i])
+available=1;
+if (available==0)
+{
+frame[j]=a[i];
+j=(j+1)%fsize;
+pagefault++;
+}
+}
+printf("Number of Page Faults are : %d\n\n",pagefault);
+return 0;
+}
+OPTIMAL paging
+ #include<stdio.h>
+void main()
+{
+int input[50],distance[50],pos=0,j=0,k=0,p=0,a=0,largest=0,count=0,i=0,available=0,pagefault=-
+1,frame[10],n=0,f=0;
+printf("enter the no of pages:");
+scanf("%d",&n);
+printf("Enter the pages:");
+for(i=0;i<n;i++)
+scanf("%d",&input[i]);
+printf("Enter the FRAMESIZE:");
+scanf("%d",&f);
+for(i=0;i<f;i++)
+frame[i]=-1;
+for(i=0;i<f;i++)
+{
+frame[i]=input[i];
+pos++;
+pagefault++;
+}
+while(pos<n)
+{available=0;
+for(a=0;a<f;a++)
+if(input[pos]==frame[a])
+available=1;
+if(available==0)
+{
+for(a=0;a<f;a++)
+distance[a]=0;
+for(i=0;i<f;i++)
+{
+for(j=pos;j<n;j++)
+{
+if(frame[i]!=input[pos])
+{
+count++;
+}
+else
+{
+distance[i]=count;
+count=0;
+break;
+}
+}
+}
+largest=distance[0];
+k=0;
+for(i=0;i<f;i++)
+if(largest<distance[i])
+{
+largest=distance[i];
+k=i;
+}
+frame[k]=input[pos];
+pagefault++;
+}
+pos++;
+}
+printf("Pagefault : %d\n\n",pagefault);
+}
+LRU paging
+#include<stdio.h>
+void main()
+{
+int q[20],p[50],c=0,c1,d,f,i,j,k=0,n,r,temp,b[20],c2[20];
+printf("enter the no of pages:");
+scanf("%d",&n);
+printf("Enter the pages:");
+for(i=0;i<n;i++)
+scanf("%d",&p[i]);
+printf("Enter the FRAMESIZE:");
+scanf("%d",&f);
+q[0]=p[0];
+c++;
+k++;
+for(i=1;i<n;i++)
+{
+c1=0;
+for(j=0;j<f;j++)
+{
+if(p[i]!=q[j])
+c1++;
+}
+if(c1==f)
+{
+c++;
+if(k<f)
+{
+ q[k]=p[i];
+k++;
+}
+else
+{
+for(r=0;r<f;r++)
+{
+c2[r]=0;
+for(j=i-1;j<n;j--)
+{
+if(q[r]!=p[j])
+c2[r]++;
+ else
+ break;
+}
+}
+for(r=0;r<f;r++)
+b[r]=c2[r];
+for(r=0;r<f;r++)
+{
+for(j=r;j<f;j++)
+{
+if(b[r]<b[j])
+{
+temp=b[r];
+b[r]=b[j];
+b[j]=temp;
+}
+}
+}
+for(r=0;r<f;r++)
+{
+if(c2[r]==b[0])
+q[r]=p[i];
+}
+}
+}
+}
+printf("\nThe no of page faults is %d \n",c);
+}
